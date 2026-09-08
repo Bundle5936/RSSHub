@@ -1,6 +1,10 @@
 import { parseDate } from '@/utils/parse-date';
 import { fallback, queryToBoolean, queryToInteger } from '@/utils/readable-social';
 
+const DEFAULT_PROFILE_IMAGE = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png';
+
+export const getProfileImage = (url: string | undefined) => url?.replace(/_normal.jpg$/, '.jpg') ?? DEFAULT_PROFILE_IMAGE;
+
 const getQueryParams = (url) => Object.fromEntries(new URL(url).searchParams.entries());
 const getOriginalImg = (url) => {
     // https://greasyfork.org/zh-CN/scripts/2312-resize-image-on-open-image-in-new-tab/code#n150
@@ -532,4 +536,5 @@ export default {
     parseRouteParams,
     excludeRetweet,
     keepOnlyMedia,
+    getProfileImage,
 };

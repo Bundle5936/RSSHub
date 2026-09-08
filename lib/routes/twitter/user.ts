@@ -88,7 +88,7 @@ async function handler(ctx) {
     return {
         title: `Twitter @${userInfo?.name}`,
         link: `https://x.com/${userInfo?.screen_name}`,
-        image: profileImageUrl.replace(/_normal.jpg$/, '.jpg'),
+        image: utils.getProfileImage(profileImageUrl),
         description: userInfo?.description,
         item:
             data &&
