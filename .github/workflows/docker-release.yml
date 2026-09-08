@@ -28,7 +28,7 @@ jobs:
         name: Build ${{ matrix.platform }} image
         if: >-
             github.event_name == 'workflow_dispatch' ||
-            (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'chore(sync): merge upstream master'))
+            (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'chore(sync): merge upstream'))
         runs-on: ${{ matrix.runner }}
         timeout-minutes: 45
         strategy:

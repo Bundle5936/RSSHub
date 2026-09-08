@@ -3,7 +3,7 @@ name: Sync upstream
 on:
     workflow_dispatch:
     schedule:
-        - cron: '17 */6 * * *'
+        - cron: '*/30 * * * *'
 
 permissions:
     contents: write
@@ -16,10 +16,11 @@ concurrency:
 env:
     TARGET_BRANCH: master
     UPSTREAM_REPOSITORY: DIYgod/RSSHub
+    UPSTREAM_DOCKER_WORKFLOW: docker-release.yml
 
 jobs:
     sync:
-        name: Sync upstream with Git merge conflict detection
+        name: Sync the latest upstream Docker release
         runs-on: ubuntu-latest
         timeout-minutes: 45
         steps:
@@ -39,7 +40,7 @@ jobs:
                   node-version: '24'
                   cache: pnpm
 
-            - name: Merge upstream into candidate branch
+            - name: Resolve latest successful upstream Docker release
               id: compare
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,27 +52,44 @@ jobs:
                   git remote add upstream "https://github.com/${UPSTREAM_REPOSITORY}.git" 2>/dev/null || true
                   git fetch upstream master --prune
 
-                  upstream_sha="$(git rev-parse upstream/master)"
-                  upstream_title="$(git log -1 --format=%s upstream/master)"
+                  release_json="$(gh api "repos/${UPSTREAM_REPOSITORY}/actions/workflows/${UPSTREAM_DOCKER_WORKFLOW}/runs?branch=master&status=success&per_page=1" --jq '.workflow_runs[0]')"
+                  if [ -z "$release_json" ] || [ "$release_json" = "null" ]; then
+                    echo "status=no_release" >> "$GITHUB_OUTPUT"
+                    echo "No successful upstream Docker release has been published yet."
+                    exit 0
+                  fi
+
+                  release_run_id="$(jq -r '.id' <<< "$release_json")"
+                  release_run_url="$(jq -r '.html_url' <<< "$release_json")"
+                  upstream_sha="$(jq -r '.head_sha' <<< "$release_json")"
+                  if ! git cat-file -e "${upstream_sha}^{commit}"; then
+                    echo "The upstream Docker release commit is not reachable from upstream/master: ${upstream_sha}" >&2
+                    exit 1
+                  fi
+                  upstream_title="$(git show -s --format=%s "$upstream_sha")"
                   {
                     echo "upstream_sha=${upstream_sha}"
+                    echo "release_run_id=${release_run_id}"
+                    echo "release_run_url=${release_run_url}"
                     echo "upstream_title<<SYNC_EOF"
                     echo "$upstream_title"
                     echo "SYNC_EOF"
                   } >> "$GITHUB_OUTPUT"
+                  echo "Upstream Docker release run: ${release_run_url}"
+                  echo "Upstream release commit: ${upstream_sha} (${upstream_title})"
 
-                  if git merge-base --is-ancestor upstream/master HEAD; then
+                  if git merge-base --is-ancestor "$upstream_sha" HEAD; then
                     echo "status=already_current" >> "$GITHUB_OUTPUT"
-                    echo "Upstream is already contained in ${TARGET_BRANCH}."
+                    echo "The maintained branch already contains the latest upstream Docker release."
                     exit 0
                   fi
 
                   candidate_branch="sync-check-${GITHUB_RUN_ID}"
                   git checkout -b "$candidate_branch"
-                  if git merge --no-commit --no-ff upstream/master; then
+                  if git merge --no-commit --no-ff "$upstream_sha"; then
                     echo "candidate_branch=${candidate_branch}" >> "$GITHUB_OUTPUT"
                     echo "status=clean" >> "$GITHUB_OUTPUT"
-                    echo "Upstream merge completed without textual conflicts."
+                    echo "The latest upstream Docker release merged without textual conflicts."
                     exit 0
                   fi
 
@@ -83,10 +101,11 @@ jobs:
 
                   body_file="$(mktemp)"
                   {
-                    echo "## Upstream merge conflict"
+                    echo "## Upstream Docker release merge conflict"
                     echo
-                    echo "The candidate merge of upstream ${UPSTREAM_REPOSITORY} conflicted. The maintained branch was not changed."
+                    echo "The latest successful upstream Docker release could not be merged. The maintained branch was not changed."
                     echo
+                    echo "- Upstream Docker release run: ${release_run_url}"
                     echo "- Upstream commit: ${upstream_sha} (${upstream_title})"
                     echo "- **Conflicting files:**"
                     echo '```text'
@@ -94,19 +113,25 @@ jobs:
                     echo '```'
                     echo
                     echo "A clean Git merge is required before automated tests, container validation, and promotion can continue."
-                    echo
-                    echo "Actions run: https://github.com/${GITHUB_REPOSITORY}/actions"
                   } > "$body_file"
 
-                  existing="$(gh issue list --state open --search "[upstream-sync] Merge conflict ${upstream_sha:0:8} in:title" --json number --jq 'length')"
+                  existing="$(gh issue list --state open --search "[upstream-sync] Docker release ${upstream_sha:0:8} in:title" --json number --jq 'length')"
                   if [ "$existing" = "0" ]; then
                     gh issue create \
-                      --title "[upstream-sync] Merge conflict (${upstream_sha:0:8})" \
+                      --title "[upstream-sync] Docker release merge conflict (${upstream_sha:0:8})" \
                       --body-file "$body_file" || true
                   fi
                   rm -f "$body_file"
                   echo "status=merge_conflict" >> "$GITHUB_OUTPUT"
                   exit 10
+
+            - name: Stop when no new upstream Docker release exists
+              if: steps.compare.outputs.status == 'no_release'
+              run: echo "No upstream Docker release is available yet."
+
+            - name: Stop when the branch is already current
+              if: steps.compare.outputs.status == 'already_current'
+              run: echo "The maintained branch already contains the latest upstream Docker release."
 
             - name: Install dependencies
               if: steps.compare.outputs.status == 'clean'
@@ -136,8 +161,8 @@ jobs:
                   UPSTREAM_TITLE: ${{ steps.compare.outputs.upstream_title }}
               run: |
                   set -euo pipefail
-                  git commit -m "chore(sync): merge upstream master (${UPSTREAM_SHA:0:8})"
+                  git commit -m "chore(sync): merge upstream Docker release (${UPSTREAM_SHA:0:8})"
                   git checkout "${TARGET_BRANCH}"
                   git merge --ff-only "${CANDIDATE_BRANCH}"
                   git push origin "${TARGET_BRANCH}"
-                  echo "Promoted upstream ${UPSTREAM_SHA} (${UPSTREAM_TITLE}) to ${TARGET_BRANCH}."
+                  echo "Promoted upstream Docker release ${UPSTREAM_SHA} (${UPSTREAM_TITLE}) to ${TARGET_BRANCH}."
