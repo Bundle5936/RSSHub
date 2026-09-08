@@ -13,6 +13,12 @@ on:
             - 'pnpm-lock.yaml'
             - 'scripts/docker/**'
     workflow_dispatch:
+        inputs:
+            publish_production:
+                description: Publish the production chromium-bundled tag (normally leave disabled for PR testing)
+                required: false
+                default: false
+                type: boolean
 
 permissions:
     contents: read
@@ -20,6 +26,9 @@ permissions:
 jobs:
     release:
         name: Build ${{ matrix.platform }} image
+        if: >-
+            github.event_name == 'workflow_dispatch' ||
+            (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'chore(sync): merge upstream master'))
         runs-on: ${{ matrix.runner }}
         timeout-minutes: 45
         strategy:
@@ -62,8 +71,9 @@ jobs:
               with:
                   images: ${{ steps.prepare.outputs.image_name }}
                   tags: |
-                      type=raw,value=chromium-bundled
-                      type=raw,value=chromium-bundled-{{date 'YYYY-MM-DD'}}
+                      type=raw,value=chromium-bundled,enable=${{ github.event_name == 'push' || inputs.publish_production }}
+                      type=raw,value=chromium-bundled-{{date 'YYYY-MM-DD'}},enable=${{ github.event_name == 'push' || inputs.publish_production }}
+                      type=raw,value=manual-${{ github.sha }},enable=${{ github.event_name == 'workflow_dispatch' && !inputs.publish_production }}
                       type=sha,format=long,prefix=chromium-bundled-
                   flavor: latest=false
 
@@ -132,8 +142,9 @@ jobs:
               with:
                   images: ${{ steps.prepare.outputs.image_name }}
                   tags: |
-                      type=raw,value=chromium-bundled
-                      type=raw,value=chromium-bundled-{{date 'YYYY-MM-DD'}}
+                      type=raw,value=chromium-bundled,enable=${{ github.event_name == 'push' || inputs.publish_production }}
+                      type=raw,value=chromium-bundled-{{date 'YYYY-MM-DD'}},enable=${{ github.event_name == 'push' || inputs.publish_production }}
+                      type=raw,value=manual-${{ github.sha }},enable=${{ github.event_name == 'workflow_dispatch' && !inputs.publish_production }}
                       type=sha,format=long,prefix=chromium-bundled-
                   flavor: latest=false
 
