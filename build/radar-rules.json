@@ -5652,6 +5652,27 @@
       }
     ]
   },
+  "yinxubwg.cn": {
+    "_name": "Yinxu Museum",
+    "www": [
+      {
+        "title": "Notice",
+        "docs": "https://docs.rsshub.app/routes/travel",
+        "source": [
+          "/yxgw/notice"
+        ],
+        "target": "/yinxubwg/notice"
+      },
+      {
+        "title": "Exhibition Information",
+        "docs": "https://docs.rsshub.app/routes/travel",
+        "source": [
+          "/yxgw/exhibitionIndex"
+        ],
+        "target": "/yinxubwg/exhibitionIndex/:type"
+      }
+    ]
+  },
   "yoasobi-music.jp": {
     "_name": "Yoasobi Official",
     "www": [
@@ -9452,6 +9473,19 @@
           "/index.php"
         ],
         "target": "/91porn/:lang?"
+      }
+    ]
+  },
+  "98zhibo.com": {
+    "_name": "98直播吧",
+    "www": [
+      {
+        "title": "足球集锦",
+        "docs": "https://docs.rsshub.app/routes/sport",
+        "source": [
+          "/zuqiujijin/"
+        ],
+        "target": "/98zhibo/zuqiujijin"
       }
     ]
   },
@@ -25107,6 +25141,19 @@
       }
     ]
   },
+  "icity.ly": {
+    "_name": "iCity",
+    "art": [
+      {
+        "title": "iMuseum 城市展览",
+        "docs": "https://docs.rsshub.app/routes/travel",
+        "source": [
+          "/:city"
+        ],
+        "target": "/icity/imuseum/:city"
+      }
+    ]
+  },
   "idai.ly": {
     "_name": "iDaily",
     ".": [
@@ -25873,6 +25920,19 @@
           "/"
         ],
         "target": "/iqnew/latest"
+      }
+    ]
+  },
+  "iracing.com": {
+    "_name": "iRacing",
+    "www": [
+      {
+        "title": "News",
+        "docs": "https://docs.rsshub.app/routes/game",
+        "source": [
+          "/category/news/sim-racing-news"
+        ],
+        "target": "/iracing/news"
       }
     ]
   },
@@ -27791,6 +27851,19 @@
           "/"
         ],
         "target": "/magnumphotos/magazine"
+      }
+    ]
+  },
+  "maldita.es": {
+    "_name": "Maldita.es",
+    ".": [
+      {
+        "title": "Latest Updates",
+        "docs": "https://docs.rsshub.app/routes/new-media",
+        "source": [
+          "/:category/"
+        ],
+        "target": "/maldita/updates/:category"
       }
     ]
   },

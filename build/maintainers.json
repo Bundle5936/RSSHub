@@ -1686,6 +1686,12 @@
   "/xkb/:channel": [
     "TimWu007"
   ],
+  "/yinxubwg/notice": [
+    "magazian"
+  ],
+  "/yinxubwg/exhibitionIndex/:type": [
+    "magazian"
+  ],
   "/yoasobi-music/info/:category?": [
     "Kiotlin"
   ],
@@ -2353,6 +2359,9 @@
   ],
   "/91porn/:lang?": [
     "TonyRL"
+  ],
+  "/98zhibo/zuqiujijin": [
+    "chouj"
   ],
   "/99percentinvisible/transcript": [
     "Ji4n1ng"
@@ -5382,6 +5391,9 @@
   "/ichunqiu/": [
     "8430177"
   ],
+  "/icity/imuseum/:city/:type?": [
+    "chouj"
+  ],
   "/icity/:id": [
     "nczitzk"
   ],
@@ -5544,6 +5556,9 @@
   ],
   "/iqnew/latest": [
     "nczitzk"
+  ],
+  "/iracing/news": [
+    "canonnizq"
   ],
   "/itc/collection/:colType": [
     "cnkmmk"
@@ -6058,6 +6073,9 @@
   ],
   "/magnumphotos/magazine": [
     "IvanWng97"
+  ],
+  "/maldita/updates/:category?": [
+    "canonnizq"
   ],
   "/manhuagui/comic/:id/:chapterCnt?": [
     "MegrezZhu"

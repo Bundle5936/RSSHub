@@ -21457,6 +21457,61 @@
     "url": "xkb.com.cn",
     "lang": "zh-CN"
   },
+  "yinxubwg": {
+    "routes": {
+      "/notice": {
+        "path": "/notice",
+        "categories": [
+          "travel"
+        ],
+        "example": "/yinxubwg/notice",
+        "name": "Notice",
+        "maintainers": [
+          "magazian"
+        ],
+        "radar": [
+          {
+            "source": [
+              "www.yinxubwg.cn/yxgw/notice"
+            ],
+            "target": "/notice"
+          }
+        ],
+        "location": "notice.ts",
+        "module": "() => import('@/routes/yinxubwg/notice.ts')"
+      },
+      "/exhibitionIndex/:type": {
+        "path": "/exhibitionIndex/:type",
+        "categories": [
+          "travel"
+        ],
+        "example": "/yinxubwg/exhibitionIndex/2",
+        "parameters": {
+          "type": "Exhibition type. Supported values: `1` (Permanent Exhibition), `2` (Temporary Exhibition), `3` (Past Exhibitions)."
+        },
+        "name": "Exhibition Information",
+        "maintainers": [
+          "magazian"
+        ],
+        "radar": [
+          {
+            "source": [
+              "www.yinxubwg.cn/yxgw/exhibitionIndex"
+            ],
+            "target": "/exhibitionIndex/:type"
+          }
+        ],
+        "location": "exhibition.tsx",
+        "module": "() => import('@/routes/yinxubwg/exhibition.tsx')"
+      }
+    },
+    "apiRoutes": {},
+    "name": "Yinxu Museum",
+    "url": "www.yinxubwg.cn",
+    "zh": {
+      "name": "殷墟博物馆"
+    }
+  },
   "yoasobi-music": {
     "routes": {
       "/info/:category?": {
@@ -31142,6 +31197,35 @@
     "name": "91porn",
     "url": "91porn.com",
     "description": "::: tip\n91porn has multiple backup domains, routes use the permanent domain `https://91porn.com` by default. If the domain is not accessible, you can add `?domain=<domain>` to specify the domain to be used. If you want to specify the backup domain to `https://0122.91p30.com`, you can add `?domain=0122.91p30.com` to the end of all 91porn routes, then the route will become [`/91porn?domain=0122.91p30.com`](https://rsshub.app/91porn?domain=0122.91p30.com)\n:::",
+    "lang": "zh-CN"
+  },
+  "98zhibo": {
+    "routes": {
+      "/zuqiujijin": {
+        "path": "/zuqiujijin",
+        "categories": [
+          "sport"
+        ],
+        "example": "/98zhibo/zuqiujijin",
+        "name": "足球集锦",
+        "maintainers": [
+          "chouj"
+        ],
+        "radar": [
+          {
+            "source": [
+              "www.98zhibo.com/zuqiujijin/"
+            ],
+            "target": "/zuqiujijin"
+          }
+        ],
+        "location": "zuqiujijin.ts",
+        "module": "() => import('@/routes/98zhibo/zuqiujijin.ts')"
+      }
+    },
+    "apiRoutes": {},
+    "name": "98直播吧",
+    "url": "www.98zhibo.com",
     "lang": "zh-CN"
   },
   "99percentinvisible": {
@@ -72324,6 +72408,61 @@
   },
   "icity": {
     "routes": {
+      "/imuseum/:city/:type?": {
+        "path": "/imuseum/:city/:type?",
+        "categories": [
+          "travel"
+        ],
+        "example": "/icity/imuseum/guangzhou/latest",
+        "parameters": {
+          "city": "城市，取自站点 URL 中的城市路径，如 guangzhou、shanghai、beijing",
+          "type": {
+            "description": "展览列表类型",
+            "default": "latest",
+            "options": [
+              {
+                "value": "all",
+                "label": "全部"
+              },
+              {
+                "value": "latest",
+                "label": "最新"
+              },
+              {
+                "value": "hot",
+                "label": "热门"
+              },
+              {
+                "value": "end_soon",
+                "label": "即将结束"
+              },
+              {
+                "value": "coming",
+                "label": "即将开始"
+              },
+              {
+                "value": "outdated",
+                "label": "已结束"
+              }
+            ]
+          }
+        },
+        "name": "iMuseum 城市展览",
+        "maintainers": [
+          "chouj"
+        ],
+        "radar": [
+          {
+            "source": [
+              "art.icity.ly/:city"
+            ],
+            "target": "/imuseum/:city"
+          }
+        ],
+        "description": "iMuseum（每日环球展览）各城市正在进行与即将开始的展览。城市与类型均取自站点 URL 路径，例如 `guangzhou/latest`。",
+        "location": "imuseum.ts",
+        "module": "() => import('@/routes/icity/imuseum.ts')"
+      },
       "/:id": {
         "path": "/:id",
         "categories": [
@@ -74431,6 +74570,43 @@
     "name": "爱 Q 生活网",
     "url": "iqnew.com",
     "lang": "zh-CN"
+  },
+  "iracing": {
+    "routes": {
+      "/news": {
+        "path": "/news",
+        "categories": [
+          "game"
+        ],
+        "example": "/iracing/news",
+        "features": {
+          "requireConfig": false,
+          "requirePuppeteer": false,
+          "antiCrawler": false,
+          "supportBT": false,
+          "supportPodcast": false,
+          "supportScihub": false
+        },
+        "radar": [
+          {
+            "source": [
+              "www.iracing.com/category/news/sim-racing-news"
+            ],
+            "target": "/news"
+          }
+        ],
+        "name": "News",
+        "maintainers": [
+          "canonnizq"
+        ],
+        "location": "news.ts",
+        "module": "() => import('@/routes/iracing/news.ts')"
+      }
+    },
+    "apiRoutes": {},
+    "name": "iRacing",
+    "url": "iracing.com",
+    "description": ""
   },
   "itc": {
     "routes": {
@@ -81073,6 +81249,46 @@
     "name": "Magnum Photos",
     "url": "magnumphotos.com",
     "lang": "en"
+  },
+  "maldita": {
+    "routes": {
+      "/updates/:category?": {
+        "path": "/updates/:category?",
+        "categories": [
+          "new-media"
+        ],
+        "example": "/maldita/updates/desinfo",
+        "parameters": {
+          "category": "Category to fetch"
+        },
+        "features": {
+          "requireConfig": false,
+          "requirePuppeteer": false,
+          "antiCrawler": false,
+          "supportBT": false,
+          "supportPodcast": false,
+          "supportScihub": false
+        },
+        "radar": [
+          {
+            "source": [
+              "maldita.es/:category/"
+            ],
+            "target": "/updates/:category"
+          }
+        ],
+        "name": "Latest Updates",
+        "maintainers": [
+          "canonnizq"
+        ],
+        "description": "Categories: all | desinfo | prebunking | investigaciones | control-del-poder | policy",
+        "location": "updates.ts",
+        "module": "() => import('@/routes/maldita/updates.ts')"
+      }
+    },
+    "apiRoutes": {},
+    "name": "Maldita.es",
+    "url": "maldita.es"
   },
   "manhuagui": {
     "routes": {
@@ -144468,7 +144684,7 @@
             {
               "name": "JAVDB_SESSION",
               "description": "JavDB登陆后的session值，可在控制台的cookie下查找 `_jdb_session` 的值，即可获取",
-              "optional": true
+              "optional": false
             }
           ],
           "requirePuppeteer": false,
